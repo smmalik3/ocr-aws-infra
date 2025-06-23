@@ -152,6 +152,75 @@ final pnr = result['pnr']?['value'];
 
 ---
 
-## 📬 Contact
+## 📬 FLUTTER EXAMPLE CODE
+```dart
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
-For support or integration help, contact the API maintainer.
+void main() => runApp(MaterialApp(home: ImageUploadPage()));
+
+class ImageUploadPage extends StatefulWidget {
+  @override
+  _ImageUploadPageState createState() => _ImageUploadPageState();
+}
+
+class _ImageUploadPageState extends State<ImageUploadPage> {
+  String responseText = '';
+  bool isLoading = false;
+
+  Future<void> pickAndUploadImage() async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+
+    if (picked == null) return;
+
+    final imageBytes = await picked.readAsBytes();
+    final base64Image = base64Encode(imageBytes);
+
+    final payload = jsonEncode({"image_base64": base64Image});
+    final endpoint = Uri.parse("https://knjdgrv83i.execute-api.us-east-1.amazonaws.com/process");
+
+    setState(() => isLoading = true);
+
+    try {
+      final response = await http.post(
+        endpoint,
+        headers: {"Content-Type": "application/json"},
+        body: payload,
+      );
+
+      setState(() => responseText = response.body);
+    } catch (e) {
+      setState(() => responseText = '❌ Error: $e');
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: Text("Upload to AWS OCR")),
+    body: Padding(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        children: [
+          ElevatedButton(
+            onPressed: pickAndUploadImage,
+            child: Text("Pick and Upload Image"),
+          ),
+          if (isLoading) CircularProgressIndicator(),
+          SizedBox(height: 20),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Text(responseText, style: TextStyle(fontFamily: 'monospace')),
+            ),
+          )
+        ],
+      ),
+    ),
+  );
+}
+```
