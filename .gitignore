@@ -1,0 +1,54 @@
+# --- Node.js ---
+node_modules/
+package-lock.json
+npm-debug.log*
+
+# --- AWS Lambda Bundles ---
+lambda.zip
+*.zip
+
+# --- AWS SAM / CDK ---
+.aws-sam/
+cdk.out/
+
+# --- Terraform ---
+*.tfstate
+*.tfstate.backup
+*.tfplan
+.terraform/
+crash.log
+terraform.tfvars
+*.auto.tfvars
+
+# --- Environment Files ---
+.env
+.env.*
+
+# --- Logs ---
+*.log
+logs/
+*.log.*
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.code-workspace
+*.swp
+*.swo
+*~
+
+# --- OS-specific ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Test / Coverage ---
+coverage/
+.nyc_output/
+
+# --- Build / Output ---
+dist/
+build/
+tmp/
+temp/
+
